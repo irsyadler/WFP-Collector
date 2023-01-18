@@ -1,0 +1,8 @@
+openpyxl==3.0.10
+psutil==5.9.3
+pyvirtualdisplay==3.0
+scapy==2.5.0rc2
+selenium==4.5.0
+stem==1.8.1
+tbselenium==0.6.3
+tinydb==4.7.0
