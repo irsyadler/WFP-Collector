@@ -1,0 +1,60 @@
+#!/bin/bash
+
+############################################################
+# WFP-Collector Setup Tool
+############################################################
+
+# Set absolute path for related command
+scriptPath=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+setupScriptPath="${scriptPath}/setup.py"
+pyhtonRequirementPath="${scriptPath}/../requirements.txt"
+
+# Wrap all setup code so if any failure occur, the setup will be stopped
+{
+    printf "Launching WFP-Collector setup...\n" &&
+        printf "[1] Updating packages lists...\n" &&
+        sudo apt-get update -y &&
+
+        # Skip upgrade if flag provided
+        if [[ $* == *--no-upgrade* ]]; then
+            printf "[2] Skipped packges upgrade.\n"
+        else
+            printf "[2] Upgrading packges...\n" &&
+                sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
+        fi &&
+
+        printf "[3] Installing python3 and python3-pip...\n" &&
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install python3 python3-pip -y &&
+
+        printf "[4] Installing setup-related system application packages and python modules...\n" &&
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install tar xz-utils -y &&
+        pip3 install requests &&
+
+        printf "[5] Installing testing-related system application packages...\n" &&
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install python3-apt iputils-ping &&
+
+        printf "[6] Installing required application packages...\n" &&
+        sudo debconf-set-selections <<<"wireshark-common wireshark-common/install-setuid boolean true" &&
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install xvfb firefox wireshark rclone gzip -y &&
+
+        printf "[7] Adding user to wireshark group...\n" &&
+        # sudo adduser $USER wireshark &&
+        sudo usermod -a -G wireshark $(whoami) &&
+
+        printf "[8] Installing firefox dependency...\n" &&
+        sudo DEBIAN_FRONTEND=noninteractive apt-get install lsb-release libasound2 libatk1.0-0 libc6 libcairo-gobject2 libcairo2 libdbus-1-3 libdbus-glib-1-2 libfontconfig1 libfreetype6 libgcc-s1 libgdk-pixbuf-2.0-0 libglib2.0-0 libgtk-3-0 libharfbuzz0b libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb-shm0 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxtst6 -y &&
+        
+        printf "[9] Installing required python packages...\n" &&
+        pip3 install -r ${pyhtonRequirementPath} &&
+        
+        printf "[10] Running script to download Tor Browser and Geckodriver...\n" &&
+        python3 ${setupScriptPath} &&
+        
+        printf "\nWFP-Collector Setup: COMPLETED\n" &&
+        printf "\n=====================================================" &&
+        printf "\n!IMPORTANT: Please reboot your system before continue" &&
+        printf "\n=====================================================\n"
+} || {
+    # Catch failed setup
+    printf "\nWFP-Collector Setup: FAILED\n"
+}
