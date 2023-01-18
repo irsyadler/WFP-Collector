@@ -1,0 +1,19 @@
+# Docker directory
+docker
+
+# Python cache
+**/__pycache__
+
+##### Uncomment the following two lines to ignore: app directory (except .gitkeep)
+# app/*
+# !app/.gitkeep
+
+##### Uncomment the following two lines to ignore: output directory (except .gitkeep)
+# output/*
+# !output/.gitkeep
+
+##### Uncomment the following line to ignore: test output directory
+# test/TEST_*
+
+##### Uncomment the following line to ignore: visit database file in database directory
+/database/*.json
