@@ -1,0 +1,45 @@
+#!/bin/bash
+
+############################################################
+# WFP-Collector Runner Tool
+############################################################
+
+# Set absolute path for related command
+projectPath=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+runScriptPath="${projectPath}/run"
+setupScriptPath="${projectPath}/setup/setup"
+testScriptPath="${projectPath}/test/test"
+listCreationScriptPath="${projectPath}/database/create.py"
+crawlerScriptPath="${projectPath}/crawler/run.py"
+
+# Docker config
+dockerImageName="wfp-collector:0.5.2"
+dockerContainerName="wfp-collector-0.5.2"
+
+# Execute command
+if [ "$1" == "setup" ]; then
+    # Set excution permission on bash script
+    sudo chmod ug+x ${runScriptPath}
+    sudo chmod ug+x ${setupScriptPath}
+    sudo chmod ug+x ${testScriptPath}
+    
+    bash ${setupScriptPath} "${@:2}"
+elif [ "$1" == "test" ]; then
+    bash ${testScriptPath} "${@:2}"
+elif [ "$1" == "database" ]; then
+    python3 ${listCreationScriptPath} "${@:2}"
+elif [ "$1" == "crawler" ]; then
+    python3 ${crawlerScriptPath} "${@:2}"
+elif [ "$1" == "docker" ]; then
+    if [ "$2" == "build" ]; then
+        # Execute docker build command with custom parameters
+        docker build --tag ${dockerImageName} --file docker/Dockerfile . "${@:3}"
+    elif [ "$2" == "container" ]; then
+        # Execute docker run command with custom parameters
+        docker run --detach --tty --interactive --cap-add=NET_ADMIN --security-opt="seccomp=unconfined" --name ${dockerContainerName} ${dockerImageName} "${@:3}"
+    else
+        docker "${@:2}"
+    fi
+else
+    printf "Missing action argument.\nPossible value: [setup, test, database, crawler, docker]\n"
+fi
