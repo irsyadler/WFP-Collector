@@ -1,4 +1,3 @@
-openpyxl==3.0.10
 psutil==5.9.3
 pyvirtualdisplay==3.0
 scapy==2.5.0rc2
