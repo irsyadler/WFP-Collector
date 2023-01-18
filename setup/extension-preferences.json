@@ -1,0 +1,9 @@
+{
+    "harexporttrigger@getfirebug.com": {
+        "permissions": [
+            "devtools",
+            "internal:privateBrowsingAllowed"
+        ],
+        "origins": []
+    }
+}
