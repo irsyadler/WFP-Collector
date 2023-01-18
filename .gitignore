@@ -1,0 +1,19 @@
+# Python cache
+__pycache__
+
+# App directory (except .gitkeep)
+/app/*
+!/app/.gitkeep
+
+# Output directory (except .gitkeep)
+/output/*
+!/output/.gitkeep
+
+# Test output directory
+/test/TEST_*
+
+# Visit database file in database directory
+/database/*.json
+
+# Etc
+/z
