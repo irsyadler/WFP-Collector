@@ -1,0 +1,23 @@
+#!/bin/bash
+
+############################################################
+# WFP-Collector Testing Tool
+############################################################
+
+# Set absolute path for related command
+scriptPath=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+testScriptPath="${scriptPath}/test.py"
+
+# Ensure python3 exist
+type -P python3 >/dev/null 2>&1 &&
+    {
+        {
+            printf "Launching WFP-Collector testing...\n" && python3 ${testScriptPath} && printf "\nWFP-Collector Testing: SUCCEED\n"
+        } || {
+            printf "\nWFP-Collector Testing: FAILED\n"
+        }
+    } ||
+    # Catch if Python 3 is missing
+    {
+        printf "Python 3 is not installed.\nPlease install it using: sudo apt install python3 python3-pip\n"
+    }
