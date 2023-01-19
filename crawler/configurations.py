@@ -83,7 +83,7 @@ class crawler:
     # Config for torrc from config.json
     torrc: dict = {}
     # Preference for Tor Browser from config.json
-    browserPreference: dict = {}
+    browserPreferences: dict = {}
 
 
 class data:
@@ -100,8 +100,8 @@ class data:
     saveGuardList: bool = True
     # Default is 2. None for most compact representation and decrease file size
     jsonIndentation: int = 2
-    # Store crawling log (.crawl.log)
-    crawlLog: const.file = const.file.SAVE
+    # Store webpage visit log (.visit.log)
+    visitLog: const.file = const.file.SAVE
     # Store Tor Stem log (.stem.log)
     stemLog: const.file = const.file.SAVE
     # Log level for Tor Stem. Possible value: debug, info, notice, warn, and err. Refer: https://manpages.ubuntu.com/manpages/jammy/man1/tor.1.html
@@ -111,7 +111,7 @@ class data:
     # Log level for Tor Browser Driver. Possible value: 1 until 5. Refer: https://gitlab.torproject.org/tpo/applications/tor-browser/-/wikis/Hacking#enabling-debug-logs-in-extensions
     tbdLoglevel: int = 2
     # Generate SHA256 hash value on collected file
-    hashFile: bool = True
+    fileChecksum: bool = True
 
 
 class pcap:
@@ -120,11 +120,11 @@ class pcap:
     data: const.file = const.file.SAVE
     # Define the network interface for packet capturing
     networkInterface: str = 'eth0'
-    # [Value in byte] Max dump file size for dumpcap to run
+    # [Value in byte] Max dump file size for Dumpcap to run
     maxDumpSize: int = 40000
-    # [Value in second] Max duration for dumpcap to run, refer config.wait
+    # [Value in second] Max duration for Dumpcap to run, refer config.wait
     maxDumpDuration: int = 120
-    # [Value in second] Time to wait for dumpcap to start
+    # [Value in second] Time to wait for Dumpcap to start
     startTimeout: float = 10.0
     # Filter the collected pcap file
     filter: bool = True
@@ -140,8 +140,6 @@ class pcap:
 
 class validate:
     """ Data Validation Configurations """
-    # Enable webpage check. Ensure HTML file is not empty
-    webpageContent: bool = True
     # Check for CAPTCHA or similar robot-blocker
     webpageCaptcha: bool = True
     # Check for Tor-blocked webpage
@@ -156,8 +154,8 @@ class validate:
     minSizeHAR: int = 0
     # [Value in byte] Minimum file size for .pcapng file.
     minSizePcap: int = 0
-    # [Value in byte] Minimum file size for .crawl.log file.
-    minSizeCrawlLog: int = 0
+    # [Value in byte] Minimum file size for .visit.log file.
+    minSizeVisitLog: int = 0
     # [Value in byte] Minimum file size for .stem.log file.
     minSizeStemLog: int = 0
     # [Value in byte] Minimum file size for .tbd.log file.
@@ -185,8 +183,8 @@ class cloud:
 
 
 class notification:
-    """ Notification Bot Configurations """
-    # Enable completion notification using Telegram Bot
+    """ Telegram Notification Configurations """
+    # Enable Telegram notification using Telegram Bot API
     enable: bool = False
     # Telegram Bot Chat ID
     chatID: str = ""

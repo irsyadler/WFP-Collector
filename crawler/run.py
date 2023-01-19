@@ -1,5 +1,5 @@
 ############################################################
-# Configuration Check And Start Data Collection
+# Check Crawling Configurations And Start Crawler
 ############################################################
 
 import argparse
@@ -15,8 +15,8 @@ def init_config(checkArguments=False):
     # Default crawling activity label
     config.main.label = 'Batch_A'
     # Default visit database filename
-    config.main.visitDatabaseFilename = 'visit_database.json'  
-    
+    config.main.visitDatabaseFilename = 'visit_database.json'
+
     # -- Step 2 -> Parse configuration file (config.json) -- #
     if parse_config_file() == False:
         return False
@@ -24,18 +24,22 @@ def init_config(checkArguments=False):
     # -- Step 3 -> Parse command arguments -- #
     if checkArguments:
         # Define arguments parser
-        parser = argparse.ArgumentParser(description='Execute crawling activity')
+        parser = argparse.ArgumentParser(description='Execute crawling activity.', add_help=False)
+        parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
         parser.add_argument('-l', '--label', default=config.main.label, help='Crawling activity label')
-        parser.add_argument('-v', '--virtual', default= config.crawler.useVirtualDisplay,
-                            help='Execute crawling activity in virtual display (headless mode)')
+        parser.add_argument('-v', '--virtual', default=config.crawler.useVirtualDisplay,
+                            help='Execute crawling activity in the virtual display (headless mode)')
         parser.add_argument('-rf', '--repeatFail', action='store_true', help='Repeat failed visit')
         parser.add_argument('-mr', '--maxRepeat', default=config.crawler.maxVisitRepeat, type=int,
-                            help='The maximum number of repetition for the failed-visit to be revisit')
+                            help='The maximum number of repetitions for the FAILED visit to be revisited')
         parser.add_argument('-vd', '--visitDatabase', default=config.path.database,
                             help='File path to the visit database for crawling activity (JSON file)')
-        parser.add_argument('-op', '--outputPath', default=config.path.output, help='Directory path to store collected browsing data')
-        parser.add_argument('-up', '--uploadPath', default=config.cloud.uploadPath, help='Directory path to upload the collected data')
-        parser.add_argument('-t', '--test', action='store_true', default=config.main.test, help='Execute crawling in testing procedure')
+        parser.add_argument('-op', '--outputPath', default=config.path.output,
+                            help='Directory path to store collected browsing data')
+        parser.add_argument('-up', '--uploadPath', default=config.cloud.uploadPath,
+                            help='Directory path to upload the collected data')
+        parser.add_argument('-t', '--test', action='store_true', default=config.main.test,
+                            help='Execute crawling activity in a testing environment')
         args = parser.parse_args()
 
         # Set arguments config
@@ -55,7 +59,7 @@ def init_config(checkArguments=False):
     if len(config.path.output) == 0:
         config.path.output = os.path.join(config.path.project, 'output', config.main.label)
     if config.cloud.concatenateUploadPath == True and config.main.test == False:
-        config.cloud.uploadPath = os.path.join(config.cloud.uploadPath, config.main.hostname, config.main.label)  
+        config.cloud.uploadPath = os.path.join(config.cloud.uploadPath, config.main.hostname, config.main.label)
 
     return True
 

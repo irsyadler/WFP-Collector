@@ -58,9 +58,9 @@ def parse_config_file(returnOptionProperties=None):
                     config.crawler.torrc[option] = configDict['torrc'][option]
 
             # Parse torrc config
-            if 'browserPreference' in configDict:
-                for option in configDict['browserPreference']:
-                    config.crawler.browserPreference[option] = configDict['browserPreference'][option]
+            if 'browserPreferences' in configDict:
+                for option in configDict['browserPreferences']:
+                    config.crawler.browserPreferences[option] = configDict['browserPreferences'][option]
 
             if returnOptionProperties == None:  # Return true for normal config parse
                 return True
@@ -157,7 +157,7 @@ def append_activity_json(LOG, filePath, text, error):
         LOG.warning('[UNABLE_TO_PARSE_ACT_JSON]: ' + filePath)
 
 
-def read_last_crawl_log(crawlLogFile):
+def read_last_visit_log(crawlLogFile):
     """ Return the last status of crawling activity """
 
     # Steps to search the log:
@@ -330,11 +330,11 @@ def start_dumpcap_process(pcapFilePath):
     dumpcapCommand = 'dumpcap -a duration:{} -a filesize:{} -i {} -s 0 -f "{}" -w "{}"'.format(
         config.pcap.maxDumpDuration, config.pcap.maxDumpSize, config.pcap.networkInterface, config.pcap.filteringRule, pcapFilePath)
 
-    # Execute dumpcap process
+    # Execute Dumpcap process
     dumpcapProcess = subprocess.Popen(dumpcapCommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     dumpcapTimeout = float(config.pcap.startTimeout)
 
-    # Check dumpcap process
+    # Check Dumpcap process
     while dumpcapTimeout > 0 and not check_dumpcap_process(dumpcapProcess):
         time.sleep(0.1)
         dumpcapTimeout -= 0.1
@@ -346,7 +346,7 @@ def start_dumpcap_process(pcapFilePath):
 
 
 def stop_dumpcap_process(dumpcapProcess):
-    """ Stop dumpcap child and main process """
+    """ Stop Dumpcap child and main process """
 
     for child in get_child_process(dumpcapProcess.pid):
         child.kill()
@@ -364,7 +364,7 @@ def check_dumpcap_process(dumpcapProcess):
     return False
 
 
-def generate_file_hash(fileList: dict):
+def generate_file_checksum(fileList: dict):
     """ Return dict of collected file with sha256 digest """
 
     # Will also generate __master__ hash by generating sha256 digest from all files' generated sha256 digest

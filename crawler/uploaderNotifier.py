@@ -53,7 +53,7 @@ def check_cloud_data():
 
 
 def notify_cloud_upload_failure():
-    """ Notify upload failure using Telegram Bot Notification """
+    """ Notify upload failure using Telegram Bot API """
 
     print("[NOTIFY_CLOUD_UPLOAD_FAILURE]")
 
@@ -65,7 +65,7 @@ def notify_cloud_upload_failure():
 
 
 def notify_crawler_ended(crawlingInfo):
-    """ Prepare and notify crawler ended using Telegram Bot Notification """
+    """ Prepare and notify crawler ended using Telegram Bot API """
 
     print("[NOTIFY_CRAWLER_END]")
 
@@ -100,7 +100,7 @@ def notify_crawler_ended(crawlingInfo):
 
 
 def call_telegram_bot_api(message, printRequestURL=False):
-    """ Perform HTTPS call to the Telegram API """
+    """ Perform HTTPS call to the Telegram Bot API """
 
     url = "https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}".format(
         config.notification.token, config.notification.chatID, urllib.parse.quote_plus(message))
@@ -113,7 +113,7 @@ def call_telegram_bot_api(message, printRequestURL=False):
 
 
 def test_telegram_token():
-    """ Test the Telegram API token """
+    """ Test the Telegram Bot API token """
 
     try:
         url = "https://api.telegram.org/bot{}/getMe".format(config.notification.token)

@@ -1,5 +1,5 @@
 ############################################################
-# Primary Crawling Activity Execution
+# Manage Crawling Activity Execution
 ############################################################
 
 import time
@@ -17,19 +17,19 @@ from selenium.webdriver.firefox.options import Options
 
 # Import project module
 from functions import *
-from validator import *
+from validation import *
 from uploaderNotifier import *
 
 
-def execute_crawling_activity(visitData, shareDict):
-    """ Execute crawling activity """
+def execute_webpage_visit_activity(visitData, shareDict):
+    """ Execute webpage visit activity """
 
-    # Update crawling status for process shared variable
+    # Update visit status for process shared variable
     shareDict[const.share.STATUS] = const.crawlingStatus.STARTED
 
     # Path for saving files
     FILE_ACT = os.path.join(config.path.output, visitData['name'] + '.act.json')  # Webpage browsing activity metadata
-    FILE_LOG = os.path.join(config.path.output, visitData['name'] + '.crawl.log')  # Log file for this crawling activity.
+    FILE_LOG = os.path.join(config.path.output, visitData['name'] + '.visit.log')  # Log file for this webpage visit activity.
     FILE_TBD = os.path.join(config.path.output, visitData['name'] + '.tbd.log')  # Log file from TBDriver
     FILE_STEM = os.path.join(config.path.output, visitData['name'] + '.stem.log')  # Log file from STEM
     FILE_HTML = os.path.join(config.path.output, visitData['name'] + '.html')  # Webpage HTML file
@@ -38,7 +38,7 @@ def execute_crawling_activity(visitData, shareDict):
     FILE_PCAP = os.path.join(config.path.output, visitData['name'] + '.pcapng')  # PCAP file
 
     # Pass variable for file checking
-    shareDict[const.share.PATH] = {'act': FILE_ACT, 'crawl': FILE_LOG, 'tbd': FILE_TBD, 'stem': FILE_STEM,
+    shareDict[const.share.PATH] = {'act': FILE_ACT, 'visit': FILE_LOG, 'tbd': FILE_TBD, 'stem': FILE_STEM,
                                    'html': FILE_HTML, 'har': FILE_HAR, 'img': FILE_IMG, 'pcap': FILE_PCAP}
 
     # Create activity log file and start logging
@@ -46,7 +46,7 @@ def execute_crawling_activity(visitData, shareDict):
     LOG = create_logger(FILE_LOG, 'BROWSING')
     LOG.info('[VISIT_START]')
 
-    # Enclose all crawling activity inside try-catch
+    # Enclose all webpage visit activity inside try-catch
     try:
 
         # -> Setup STEM
@@ -87,8 +87,8 @@ def execute_crawling_activity(visitData, shareDict):
             browserPreferences['general.useragent.override'] = config.crawler.mobileUserAgent
 
         # Set custom torrc value
-        for key in config.crawler.browserPreference:
-            browserPreferences[key] = config.crawler.browserPreference[key]
+        for key in config.crawler.browserPreferences:
+            browserPreferences[key] = config.crawler.browserPreferences[key]
 
         # Setup Driver
         driver = TorBrowserDriver(tbb_path=config.path.browser, executable_path=config.path.gecko, tor_cfg=cm.USE_STEM,
@@ -115,7 +115,7 @@ def execute_crawling_activity(visitData, shareDict):
             
         # -> Get target webpage
         LOG.info('[VISIT_WEBPAGE]')
-        shareDict[const.share.STATUS] = const.crawlingStatus.BROWSING  # Update crawling status
+        shareDict[const.share.STATUS] = const.crawlingStatus.BROWSING  # Update webpage visit status
         visitData['start'] = get_timestamp(True)  # For network packet tracing
         driver.load_url(visitData['url'])
 
@@ -181,16 +181,16 @@ def execute_crawling_activity(visitData, shareDict):
         # Add visitData to shareDict for later validation (this is reference copy)
         shareDict[const.share.DATA] = visitData
 
-        # -> Update crawling status
+        # -> Update webpage visit status
         shareDict[const.share.STATUS] = const.crawlingStatus.COMPLETED
 
     except ErrorFound as error:  # Catch error that explicitly raised
         LOG.error('[VISIT_ERROR]', exc_info=True)
-        shareDict[const.share.STATUS] = const.crawlingStatus.FAILED  # Update crawling status
+        shareDict[const.share.STATUS] = const.crawlingStatus.FAILED  # Update webpage visit status
         shareDict[const.share.REASON] = str(error)  # Get error reason
     except Exception as error:
         LOG.error('[VISIT_EXCEPTION]', exc_info=True)
-        shareDict[const.share.STATUS] = const.crawlingStatus.FAILED  # Update crawling status
+        shareDict[const.share.STATUS] = const.crawlingStatus.FAILED  # Update webpage visit status
 
 
 def manage_crawling_activity():
@@ -272,7 +272,7 @@ def manage_crawling_activity():
                 shareDict[const.share.STATUS] = const.crawlingStatus.READY  # Initialize dictionary
 
                 # -> Execute crawling activity
-                executer = multiprocessing.Process(target=execute_crawling_activity,
+                executer = multiprocessing.Process(target=execute_webpage_visit_activity,
                                                    name="execute_crawl", args=(visitData, shareDict))
                 executer.start()
                 executer.join(config.wait.roundOne)
@@ -324,10 +324,9 @@ def manage_crawling_activity():
                             LOG.info('[FILTER_DUMPCAP]')
                             filter_pcap_file(shareDict[const.share.PATH]['pcap'], visitData)
 
-                        # -> Check if Webpage is tor-blocked or behind captcha-related page
-                        if config.validate.webpageContent == True:
-                            LOG.info('[VALIDATE_WEBPAGE]')
-                            validate_webpage_content(shareDict[const.share.PATH]['html'], visitData)
+                        # -> Check if Webpage is empty, tor-blocked or behind captcha-related page
+                        LOG.info('[VALIDATE_WEBPAGE]')
+                        validate_webpage_content(shareDict[const.share.PATH]['html'], visitData)
                                 
                         # Check captured packets count (after pcap filtered)
                         check_pcap_packet_count(LOG, shareDict[const.share.PATH]['pcap'])
@@ -337,7 +336,7 @@ def manage_crawling_activity():
                         check_file_size(LOG, shareDict[const.share.PATH]['img'], config.validate.minSizeImg)
                         check_file_size(LOG, shareDict[const.share.PATH]['har'], config.validate.minSizeHAR)
                         check_file_size(LOG, shareDict[const.share.PATH]['pcap'], config.validate.minSizePcap)
-                        check_file_size(LOG, shareDict[const.share.PATH]['crawl'], config.validate.minSizeCrawlLog)
+                        check_file_size(LOG, shareDict[const.share.PATH]['visit'], config.validate.minSizeVisitLog)
                         check_file_size(LOG, shareDict[const.share.PATH]['stem'], config.validate.minSizeStemLog)
                         check_file_size(LOG, shareDict[const.share.PATH]['tbd'], config.validate.minSizeTBDLog)
                         
@@ -352,16 +351,16 @@ def manage_crawling_activity():
 
                 # Phase 4 - Post-processing Collected Data & File ################################################################################
                 try:
-                    # Generate hash on collected file (before deletion or compression)
-                    if config.data.hashFile == True:
+                    # Generate checksum on collected file (before deletion or compression)
+                    if config.data.fileChecksum == True:
                         LOG.info('[GENERATE_SHA256]')
-                        visitData['sha256'] = generate_file_hash(shareDict[const.share.PATH])
+                        visitData['sha256'] = generate_file_checksum(shareDict[const.share.PATH])
 
                     LOG.info('[POST_PROCESS_FILE]')
                     # Process .html
                     process_collected_file(LOG, shareDict[const.share.PATH]['html'], config.data.html, shareDict[const.share.STATUS])
-                    # Process .crawl.log
-                    process_collected_file(LOG, shareDict[const.share.PATH]['crawl'], config.data.crawlLog, shareDict[const.share.STATUS])
+                    # Process .visit.log
+                    process_collected_file(LOG, shareDict[const.share.PATH]['visit'], config.data.visitLog, shareDict[const.share.STATUS])
                     # Process .stem.log
                     process_collected_file(LOG, shareDict[const.share.PATH]['stem'], config.data.stemLog, shareDict[const.share.STATUS])
                     # Process .tbd.log
@@ -399,8 +398,8 @@ def manage_crawling_activity():
                     if const.share.REASON in shareDict:
                         errorReason = shareDict[const.share.REASON]
                     else:
-                        # Read last text from .crawl.log and record it as errorReason
-                        errorReason = read_last_crawl_log(shareDict[const.share.PATH]['crawl'])
+                        # Read last text from .visit.log and record it as errorReason
+                        errorReason = read_last_visit_log(shareDict[const.share.PATH]['visit'])
 
                     # Update error records
                     append_visit_records(database, query, visitData['name'], visitStartTimestamp, errorReason)
