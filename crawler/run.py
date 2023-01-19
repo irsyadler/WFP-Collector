@@ -47,7 +47,6 @@ def init_config(checkArguments=False):
         if args.display == True:
             config.crawler.useVirtualDisplay = False
         config.main.label = args.label
-        config.crawler.useVirtualDisplay = args.virtual
         config.crawler.maxVisitRepeat = args.maxRepeat
         config.path.database = args.visitDatabase
         config.path.output = args.outputPath
