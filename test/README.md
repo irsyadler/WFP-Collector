@@ -49,7 +49,7 @@ WFP-Collector Testing: FAILED
 The lines before this message will hint at the failure's reason.
 
 #### Dumpcap Error
-If the following message appear in the failed test, the [configured network interface](../setup#configuring-network-interface) is incorrect.
+If the following message appear in the failed test, the [configured network interface](../setup/README.md#configuring-network-interface) is incorrect.
 ```
 Capturing on 'eth0'
 dumpcap: The capture session could not be initiated on capture device "eth0" (No such device exists).
