@@ -32,24 +32,23 @@ CLOUD_UPLOAD_TEST_FILE = os.path.join(TEST_PATH.resolve(), 'testCloudUpload.txt'
 CRAWLER_OUTPUT_PATH = os.path.join(TEST_PATH.resolve(), TEST_LABEL)
 VISIT_DATABASE_PATH = os.path.join(CRAWLER_OUTPUT_PATH, 'testVisitDatabase.json')
 CRAWLER_OUTPUT_CHECK_FILE_PATH = os.path.join(CRAWLER_OUTPUT_PATH, 'test_d_1.act.json')
+HAR_EXPORT_TRIGGER_EXTENSION_PATH = "Browser/TorBrowser/Data/Browser/profile.default/extensions/harexporttrigger@getfirebug.com.xpi"
+TOR_BROWSER_EXTENSION_PREFERENCES_PATH = "Browser/TorBrowser/Data/Browser/profile.default/extension-preferences.json"
 
-# Setup configuration
-SETUP_CONFIG = {}
 
 # Information URL
-HELP_TOR_BROWSER = ""
-HELP_GECKODRIVER = ""
+HELP_TOR_BROWSER = "https://github.com/irsyadler/WFP-Collector/tree/main/setup#3-download-tor-browser-and-geckodriver"
 
 # Dumpcap test config
 DUMPCAP_PING_ADDRESS = '1.1.1.1'
-DUMPCAP_TESTING_SECONDS = 5
+DUMPCAP_TESTING_SECONDS = 10
 
 # Minimum apps version
 MIN_VER = {
     'python3.minor': 10,
     'pip.major': 20,
-    'firefox.major': 108,
-    'torBrowser.major': 11,
+    'firefox.major': 109,
+    'torBrowser.major': 12,
     'geckodriver.minor': 32
 }
 
@@ -87,8 +86,8 @@ def check_required_system_applications():
         # Check Firefox version
         try:
             firefoxVersion = subprocess.check_output(
-                ['firefox', '--version']).decode(sys.stdout.encoding).strip()  # Example: Mozilla Firefox 108.0.1
-            temp = firefoxVersion.split()[2]  # Example: 108.0.1
+                ['firefox', '--version']).decode(sys.stdout.encoding).strip()  # Example: Mozilla Firefox 109.0.1
+            temp = firefoxVersion.split()[2]  # Example: 109.0.1
             temp = temp.split('.')
             if int(temp[0]) < MIN_VER['firefox.major']:
                 proceed = False
@@ -118,7 +117,7 @@ def check_required_system_applications():
 
 
 def check_required_tbb_and_gecko():
-    """ Ensure the Tor Browser and Geckodriver are available """
+    """ Ensure the Tor Browser and Geckodriver are available and configured appropriately """
 
     proceed = True
 
@@ -139,13 +138,13 @@ def check_required_tbb_and_gecko():
                     print("ERROR_BROWSER_VERSION: Tor Browser {}\nPlease refer: {}".format(jsonData['version'], HELP_TOR_BROWSER))
 
                 # Check if HAR extension is exist
-                if os.path.isfile(os.path.join(config.path.browser, SETUP_CONFIG['harExportTriggerExtensionPath'])) == False:
+                if os.path.isfile(os.path.join(config.path.browser, HAR_EXPORT_TRIGGER_EXTENSION_PATH)) == False:
                     proceed = False
                     print("ERROR_BROWSER_EXTENSION: Missing HAR Export Trigger extension.\nPlease refer: {}".format(HELP_TOR_BROWSER))
 
                 # Check if HAR enabled in extension preferences
                 torBrowserExtensionPreferencesPath = os.path.join(
-                    config.path.browser, SETUP_CONFIG['torBrowserExtensionPreferencesPath'])
+                    config.path.browser, TOR_BROWSER_EXTENSION_PREFERENCES_PATH)
                 if os.path.isfile(torBrowserExtensionPreferencesPath) == True:
                     # Parse extension preferences
 
@@ -189,20 +188,20 @@ def check_required_tbb_and_gecko():
                 pass
             elif int(geckoVersion.split('.')[1]) < MIN_VER['geckodriver.minor']:
                 proceed = False
-                print("ERROR_BROWSER_VERSION: Geckodriver {}\nPlease refer: {}".format(geckoVersion, HELP_GECKODRIVER))
+                print("ERROR_BROWSER_VERSION: Geckodriver {}\nPlease refer: {}".format(geckoVersion, HELP_TOR_BROWSER))
         except Exception as e:
             proceed = False
-            print("ERROR_MALFORMED_BROWSER: Unable to read the Geckodriver version\nPlease refer: {}".format(HELP_GECKODRIVER))
+            print("ERROR_MALFORMED_BROWSER: Unable to read the Geckodriver version\nPlease refer: {}".format(HELP_TOR_BROWSER))
 
     else:
         proceed = False
-        print("ERROR_MISSING_BROWSER: Geckodriver\nPlease refer: {}".format(HELP_GECKODRIVER))
+        print("ERROR_MISSING_BROWSER: Geckodriver\nPlease refer: {}".format(HELP_TOR_BROWSER))
 
     return proceed
 
 
 def check_required_packages():
-    """ Ensure the required python packages are available """
+    """ Ensure the required python packages are available with the correct version """
 
     proceed = True
     missingPackageList = []
@@ -233,7 +232,7 @@ def check_required_packages():
 
 
 def test_dumpcap():
-    """ Ensure dumpcap is working with correct interface and permission """
+    """ Ensure Dumpcap is working with the correct interface and permission """
 
     try:
         pcapFilePath = os.path.join(CRAWLER_OUTPUT_PATH, 'testDumpcap.pcapng')
@@ -246,10 +245,10 @@ def test_dumpcap():
             DUMPCAP_TESTING_SECONDS, 1024 * 100, config.pcap.networkInterface, pcapFilePath)
         print("[DUMPCAP_TEST_COMMAND]", dumpcapCommand, "\n")
 
-        # Start dumpcap
+        # Start Dumpcap
         dumpcapOutput = os.system(dumpcapCommand)
 
-        # Check dumpcap for error
+        # Check Dumpcap for error
         if os.waitstatus_to_exitcode(dumpcapOutput) > 0:
             print('ERROR_DUMPCAP_TEST: Dumpcap unable to capture network packet.')
             return False
@@ -278,7 +277,7 @@ def test_dumpcap():
 
 
 def test_cloud_upload():
-    """ Ensure the cloud upload feature sing clone is functional """
+    """ Ensure the cloud upload feature using Rclone is functional """
 
     # Check if Rclone is installed
     try:
@@ -305,7 +304,7 @@ def test_cloud_upload():
 
 
 def test_telegram_notification():
-    """ Ensure the Telegram Bot notification feature is functional """
+    """ Ensure the Telegram notification feature is functional """
 
     try:
         message = "{} | {} | {} | Telegram Notification Test".format(
@@ -341,17 +340,12 @@ def test_crawler_activity():
     """ Test the main crawler activity """
 
     try:
-        # command = ['python3', os.path.join(CRAWLER_PATH, 'run.py'), '-l', TEST_LABEL, '-vd',
-        #            VISIT_DATABASE_PATH, '-op', CRAWLER_OUTPUT_PATH, '-up', config.cloud.uploadPath, '-t']
-
         command = 'python3 "{}" -l {} -vd "{}" -op "{}" -up "{}" -t'.format(os.path.join(
             CRAWLER_PATH, 'run.py'), TEST_LABEL, VISIT_DATABASE_PATH, CRAWLER_OUTPUT_PATH, config.cloud.uploadPath)
         print("[CRAWLING_TEST_COMMAND]", command, "\n")
 
         exitCode = os.system(command)
         # Execute the crawling command
-        # crawlerOutput = subprocess.Popen(command)
-        # output = crawlerOutput.communicate()
 
         # Check crawler exit code
         if os.waitstatus_to_exitcode(exitCode) > 0:
@@ -398,12 +392,10 @@ def run_full_testing():
 
     # -> Start the whole test
     print('[LABEL]: ' + TEST_LABEL)
-    print("\n[1]-> Checking required application packages...")
+    print("\n[1]-> Checking required system applications...")
     if check_required_system_applications() == True:
         print("\n[2]-> Checking configuration file...")
-        global SETUP_CONFIG
-        SETUP_CONFIG = parse_config_file('setup')
-        if SETUP_CONFIG != False:
+        if parse_config_file() != False:
             print("\n[3]-> Checking required browser...")
             if check_required_tbb_and_gecko() == True:
                 print("\n[4]-> Checking required python packages...")
