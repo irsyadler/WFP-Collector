@@ -102,12 +102,12 @@ def create_crawler_visit_database(sourcePath, visitDatabasePath, args):
             # Append leading 0 to instance number
             instance = str(instanceCount).zfill(len(str(args.instance)))
 
-            # Build visit data format
-            visitData = {'status': const.visitStatus.PENDING, 'name': "{}_,_{}".format(
-                item[0], instance), 'mode': None, 'url': item[1], 'records': []}
-
             # Iterate each mode and append to visitDatabase
             for mode in args.mode:
+                # Build visit data format
+                visitData = {'status': const.visitStatus.PENDING, 'name': "{}_,_{}".format(
+                    item[0], instance), 'mode': None, 'url': item[1], 'records': []}
+
                 if mode == 'desktop':
                     visitData['name'] = visitData['name'].replace(",", "d")
                     visitData['mode'] = const.browserMode.DESKTOP
@@ -133,6 +133,7 @@ def create_crawler_visit_database(sourcePath, visitDatabasePath, args):
 
     return True
 
+
 def check_creation_config():
     """ Validate the config and command argument before create visit database """
     # Init all config
@@ -141,7 +142,8 @@ def check_creation_config():
     # Check arguments
     parser = argparse.ArgumentParser(description='Create a visit database for crawling activity.', add_help=False)
     parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
-    parser.add_argument('-t', '--top', default=100, type=int, help='Set the number of URLs (from the top) to be included in the visit database')
+    parser.add_argument('-t', '--top', default=100, type=int,
+                        help='Set the number of URLs (from the top) to be included in the visit database')
     parser.add_argument('-m', '--mode', nargs='+', default=['desktop'],
                         choices=['desktop', 'mobile', 'tablet'], help='Set the browsing mode: desktop, mobile, or tablet')
     parser.add_argument('-i', '--instance', default=1, type=int, help='Set the number of instances for each URL')
@@ -185,6 +187,7 @@ def check_creation_config():
         return create_crawler_visit_database(sourcePath, config.path.database, args)
     else:
         return False
+
 
 if __name__ == '__main__':
     if check_creation_config() == False:
