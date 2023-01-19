@@ -41,5 +41,5 @@ elif [ "$1" == "docker" ]; then
         docker "${@:2}"
     fi
 else
-    printf "Missing action argument.\nPossible value: [setup, test, database, crawler, docker]\n"
+    printf "Missing action parameter.\nPossible value: [setup, test, database, crawler, docker]\n"
 fi
