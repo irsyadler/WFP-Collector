@@ -60,7 +60,7 @@ The **[setup section](setup/)** explains the complete installation procedure to 
 bash run setup
 ```
 
-**IMPORTANT:** Please reboot the system immediately after successfully executing this command before continuing to ensure proper user-permission integration.
+**IMPORTANT:** Please reboot the system immediately after successfully executing this command before continuing to ensure proper user-permission integration. In addition, please [configured the correct network interface](setup/README.md#configuring-network-interface) for network traffic capturing.
 
 #### 3. Test the WFP-Collector tool
 To ensure the WFP-Collector tool working as expected, the **[test section](test/)** explains the complete testing procedure of the WFP-Collector tool. To make things easier, we provide an automated **[testing script](test/test)** which can be executed by using the following command:
