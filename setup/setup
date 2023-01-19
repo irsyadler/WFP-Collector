@@ -38,7 +38,6 @@ pyhtonRequirementPath="${scriptPath}/../requirements.txt"
         sudo DEBIAN_FRONTEND=noninteractive apt-get install xvfb firefox wireshark rclone gzip -y &&
 
         printf "[7] Adding user to wireshark group...\n" &&
-        # sudo adduser $USER wireshark &&
         sudo usermod -a -G wireshark $(whoami) &&
 
         printf "[8] Installing firefox dependency...\n" &&

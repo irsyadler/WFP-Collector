@@ -21,6 +21,8 @@ from run import *
 # Path related to setup process
 SETUP_CONFIG = {}
 EXTENSION_PREFERENCES_SOURCE_PATH = os.path.join(pathlib.Path(__file__).parent.resolve(), 'extension-preferences.json')
+HAR_EXPORT_TRIGGER_EXTENSION_PATH = "Browser/TorBrowser/Data/Browser/profile.default/extensions/harexporttrigger@getfirebug.com.xpi"
+TOR_BROWSER_EXTENSION_PREFERENCES_PATH = "Browser/TorBrowser/Data/Browser/profile.default/extension-preferences.json"
 
 
 def convert_size(size_bytes: int):
@@ -113,12 +115,12 @@ def download_and_configure_app():
                 if SETUP_CONFIG['configureHARExportTrigger'] == True:
                     print("[--] Downloading the Firefox HAR Export Trigger...")
                     # Set the location for Tor Browser's addons .xpi file
-                    firefoxAddonPath = os.path.join(config.path.browser, SETUP_CONFIG['harExportTriggerExtensionPath'])
+                    firefoxAddonPath = os.path.join(config.path.browser, HAR_EXPORT_TRIGGER_EXTENSION_PATH)
                     if downloadFile(SETUP_CONFIG['harExportTriggerDownloadURL'], firefoxAddonPath) == True:
                         # Set the location for Tor Browser's extension preferences file
                         print("[--] Copying the Tor Browser's extension preferences....")
                         shutil.copyfile(EXTENSION_PREFERENCES_SOURCE_PATH, os.path.join(
-                            config.path.browser, SETUP_CONFIG['torBrowserExtensionPreferencesPath']))
+                            config.path.browser, TOR_BROWSER_EXTENSION_PREFERENCES_PATH))
 
                     else:
                         return False
