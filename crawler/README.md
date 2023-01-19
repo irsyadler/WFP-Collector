@@ -71,7 +71,7 @@ By default, WFP-Collector will save the visible webpage screenshot. If the user 
 ## Filtering and Validation
 The data filtering and validation procedures in [validation.py](validation.py) are mostly related to the WFP experiment. Any additional procedures can be quickly added to the [validation.py](validation.py) file if needed.
 
-WFP-Collector allows users to set **minimum file size requirements and capture packet count**. If any data files from a webpage visit fail to meet this minimum requirement, the webpage visit will be labelled as `FAILED`. The following is an example of `1024 Bytes` for minimum data file size and `50 packets` for minimum captured packet count:
+WFP-Collector allows users to set **minimum file size requirements and capture packet count**. If any data files from a webpage visit fail to meet this minimum requirement, the webpage visit will be labelled as `FAILED`. The following is a requirement example of `1024 Bytes` for minimum data file size and `50 packets` for minimum captured packet count:
 
 ```
 "validate.minSizeHTML": 1024,
