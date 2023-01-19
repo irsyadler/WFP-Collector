@@ -34,17 +34,26 @@ The [test script](test) will perform the following check:
 
 
 ## Test Result
-#### Successful test
+### Successful test
 A successful test will be ended with the following message:
 ```
 WFP-Collector Testing: SUCCEED
 ```
 A test output folder will be created to save all the collected test data in the following directory: `WFP-Collector/test/TEST_<timestamp>`. The `<timestamp>` is a number generated based on the time the [test script](test) is executed.
 
-#### Failed test
+### Failed test
 A failed test will be ended with the following message:
 ```
 WFP-Collector Testing: FAILED
 ```
 The lines before this message will hint at the failure's reason.
+
+#### Dumpcap Error
+If the following message appear in the failed test, the [configured network interface](../setup#configuring-network-interface) is incorrect.
+```
+Capturing on 'eth0'
+dumpcap: The capture session could not be initiated on capture device "eth0" (No such device exists).
+Please check that you have the proper interface or pipe specified.
+ERROR_DUMPCAP_TEST: Dumpcap unable to capture network packet.
+```
 
