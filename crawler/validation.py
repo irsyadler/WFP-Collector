@@ -112,7 +112,7 @@ def filter_pcap_file(pcapFilePath, visitData):
 
 
 def check_pcap_packet_count(LOG, pcapFilePath):
-    """ Check number of packet captured and raise error if smaller than minimumCount """
+    """ Check number of packet captured and raise error if smaller than minimum packet count requirement """
     
     if os.path.isfile(pcapFilePath):
         packetCount = 0
@@ -128,7 +128,7 @@ def check_pcap_packet_count(LOG, pcapFilePath):
 
 
 def check_file_size(LOG, filePath, minimumSize, missingError=False):
-    """ Check the collected file's size and raise error if smaller than minimumSize """
+    """ Check the collected file's size and raise error if smaller than minimum size requirement """
 
     fileName = ntpath.basename(filePath)
     if os.path.isfile(filePath):
