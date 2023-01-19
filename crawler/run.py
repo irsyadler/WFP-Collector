@@ -27,8 +27,7 @@ def init_config(checkArguments=False):
         parser = argparse.ArgumentParser(description='Execute crawling activity.', add_help=False)
         parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
         parser.add_argument('-l', '--label', default=config.main.label, help='Crawling activity label')
-        parser.add_argument('-v', '--virtual', default=config.crawler.useVirtualDisplay,
-                            help='Execute crawling activity in the virtual display (headless mode)')
+        parser.add_argument('-d', '--display', action='store_true', help='Execute crawling activity in the physical display')
         parser.add_argument('-rf', '--repeatFail', action='store_true', help='Repeat failed visit')
         parser.add_argument('-mr', '--maxRepeat', default=config.crawler.maxVisitRepeat, type=int,
                             help='The maximum number of repetitions for the FAILED visit to be revisited')
@@ -45,13 +44,16 @@ def init_config(checkArguments=False):
         # Set arguments config
         if args.repeatFail == True:
             config.crawler.visitStatus = const.visitStatus.FAILED
+        if args.display == True:
+            config.crawler.useVirtualDisplay = False
         config.main.label = args.label
         config.crawler.useVirtualDisplay = args.virtual
         config.crawler.maxVisitRepeat = args.maxRepeat
         config.path.database = args.visitDatabase
         config.path.output = args.outputPath
         config.cloud.uploadPath = args.uploadPath
-        config.main.test = args.test
+        if args.test == True:
+            config.main.test = True
 
     # -- Step 4 -> Set runtime-related configuration -- #
     if len(config.path.database) == 0:

@@ -23,7 +23,7 @@ WFP-Collector will start crawling activity by visiting each webpage listed on th
 
 
 ```
-usage: run.py [-h] [-l LABEL] [-v VIRTUAL] [-rf] [-mr MAXREPEAT] [-vd VISITDATABASE] [-op OUTPUTPATH] [-up UPLOADPATH] [-t]
+usage: run.py [-h] [-l LABEL] [-d] [-rf] [-mr MAXREPEAT] [-vd VISITDATABASE] [-op OUTPUTPATH] [-up UPLOADPATH] [-t]
 
 Execute crawling activity.
 
@@ -31,8 +31,7 @@ options:
   -h, --help            Show this help message and exit
   -l LABEL, --label LABEL
                         Crawling activity label
-  -v VIRTUAL, --virtual VIRTUAL
-                        Execute crawling activity in the virtual display (headless mode)
+  -d, --display         Execute crawling activity in the physical display
   -rf, --repeatFail     Repeat failed visit
   -mr MAXREPEAT, --maxRepeat MAXREPEAT
                         The maximum number of repetitions for the FAILED visit to be revisited
@@ -49,7 +48,7 @@ options:
 ## Collected Data
 By default, the WFP-Collector stores all collected data files from the crawling activity inside the [output](../output/) folder. Please refer to the journal paper for detailed descriptions of the WFP-Collector's collected data files from the crawling activity.
 
-Suppose the user wants to save storage space. In that case, they can set the WFP-Collector to **compress** the collected files by adding the following options to the `config` object in [config.js](../config.js) file:
+Suppose the user wants to save storage space. In that case, they can set the WFP-Collector to **compress** the collected files by adding the following options to the `config` object in [config.json](../config.json) file:
 
 ```
 "data.html": "SAVE_COMPRESS",
@@ -62,7 +61,7 @@ Suppose the user wants to save storage space. In that case, they can set the WFP
 
 There are other possible file handling options as defined under the `file` class in [constants.py](constants.py).
 
-By default, WFP-Collector will save the visible webpage screenshot. If the user intends to capture a full webpage screenshot (including non-visible parts) add the following options to the `config` object in [config.js](../config.js) file: 
+By default, WFP-Collector will save the visible webpage screenshot. If the user intends to capture a full webpage screenshot (including non-visible parts) add the following options to the `config` object in [config.json](../config.json) file: 
 
 ```
 "data.saveScreenshot": "FULL"
@@ -89,7 +88,7 @@ NOTE: All the above value is in byte unit, except for `"minCapturePackets"` whic
 
 
 ## Tips and Tricks
-* All configurations in [configurations.py](configurations.py) can be overridden by adding an option to the `config` object in [config.js](../config.js) file. Certain possible value for the option is defined in [constants.py](constants.py).
+* All configurations in [configurations.py](configurations.py) can be overridden by adding an option to the `config` object in [config.json](../config.json) file. Certain possible value for the option is defined in [constants.py](constants.py).
 * The `visitStatus` for each visit instance has 3 possible statuses: `PENDING`, `COMPLETED` and `FAILED`, as defined in [constants.py](constants.py).
 * Once a webpage visit is completed, the WFP-Collector will upload the collected data to the cloud. Modify the `cloud.uploadBatch` option if you want to upload only after a certain number of completed webpage visits.
 

@@ -128,7 +128,7 @@ def create_crawler_visit_database(sourcePath, visitDatabasePath, args):
     print("Source file: {}".format(sourcePath))
     print("Total created visit data: {}".format(len(database)))
     print("Creation time: {} seconds".format(round(time.time() - processTime, 2)))
-    print("{} URL(s) in {} mode was created for {} instance(s).".format(args.top, args.mode, args.instance))
+    print("{} URL(s) in {} mode was created for {} instance(s).".format(args.top, ", ".join(args.mode), args.instance))
     print("Visit database file: {}".format(args.visitDatabase))
 
     return True

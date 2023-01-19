@@ -62,8 +62,8 @@ class crawler:
     """ Crawling Configurations """
     # Write crawling activity information file
     writeActivityInformation: bool = True
-    # Run crawling activity in headless mode
-    useVirtualDisplay: bool = False
+    # Run crawling activity in virtual display (headless browsing)
+    useVirtualDisplay: bool = True
     # Mobile user-agent string
     mobileUserAgent: str = 'Mozilla/5.0 (Android 10; Mobile; rv:102.0) Gecko/102.0 Firefox/102.0'
     # [Value in pixel unit] Desktop screen size (Width, Height)

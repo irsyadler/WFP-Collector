@@ -21,7 +21,7 @@ bash test/test
 
 The [test script](test) will perform the following check:
 * [1] Ensure the required system applications are available
-* [2] Checking `"config"` in the configuration file ([config.js](../config.js)).
+* [2] Checking `"config"` in the configuration file ([config.json](../config.json)).
 * [3] Ensure the Tor Browser and Geckodriver are available and configured appropriately.
 * [4] Ensure the required python packages are available with the correct version.
 * [5] Ensure Dumpcap is working with the correct interface and permission.
@@ -47,3 +47,4 @@ A failed test will be ended with the following message:
 WFP-Collector Testing: FAILED
 ```
 The lines before this message will hint at the failure's reason.
+

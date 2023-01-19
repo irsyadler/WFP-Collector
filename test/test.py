@@ -62,7 +62,7 @@ def check_required_system_applications():
     # Check Python version
     if sys.version_info.major != 3 or sys.version_info.minor < MIN_VER['python3.minor']:
         proceed = False
-        print("ERROR_APPLICATION_VERSION: Python {}.{}\nPlease update it using: apt install python3".format(
+        print("ERROR_APPLICATION_VERSION: Python {}.{}\nPlease update it using: sudo apt install python3".format(
             sys.version_info.major, sys.version_info.minor))
 
     # Check if Python PIP is installed
@@ -73,11 +73,11 @@ def check_required_system_applications():
         import pip
         if int(pip.__version__.split('.')[0]) < MIN_VER['pip.major']:
             proceed = False
-            print("ERROR_APPLICATION_VERSION: pip {}\nPlease update it using: apt install python3-pip".format(pip.__version__))
+            print("ERROR_APPLICATION_VERSION: pip {}\nPlease update it using: sudo apt install python3-pip".format(pip.__version__))
 
     except KeyError:
         proceed = False
-        print("ERROR_MISSING_APPLICATION: PIP\nPlease install it using: apt install python3-pip")
+        print("ERROR_MISSING_APPLICATION: PIP\nPlease install it using: sudo apt install python3-pip")
 
     # Check if Firefox is installed
     try:
@@ -91,27 +91,27 @@ def check_required_system_applications():
             temp = temp.split('.')
             if int(temp[0]) < MIN_VER['firefox.major']:
                 proceed = False
-                print("ERROR_APPLICATION_VERSION: {}\nPlease update it using: apt install firefox && sudo snap refresh firefox".format(firefoxVersion))
+                print("ERROR_APPLICATION_VERSION: {}\nPlease update it using: sudo apt install firefox && sudo snap refresh firefox".format(firefoxVersion))
         except Exception as e:
             print("VERSION_WARNING: Unable to get Firefox version -> ", e)
 
     except KeyError:
         proceed = False
-        print("ERROR_MISSING_APPLICATION: Firefox\nPlease install it using: apt install firefox")
+        print("ERROR_MISSING_APPLICATION: Firefox\nPlease install it using: sudo apt install firefox")
 
     # Check if Xvfb is installed
     try:
         aptCache['xvfb']
     except KeyError:
         proceed = False
-        print("ERROR_MISSING_APPLICATION: Xvfb\nPlease install it using: apt install xvfb")
+        print("ERROR_MISSING_APPLICATION: Xvfb\nPlease install it using: sudo apt install xvfb")
 
     # Check if Wireshark is installed
     try:
         aptCache['wireshark']
     except KeyError:
         proceed = False
-        print("ERROR_MISSING_APPLICATION: Xvfb\nPlease install it using: apt install wireshark")
+        print("ERROR_MISSING_APPLICATION: Xvfb\nPlease install it using: sudo apt install wireshark")
 
     return proceed
 
@@ -284,7 +284,7 @@ def test_cloud_upload():
         aptCache = apt.Cache()
         aptCache['rclone']
     except KeyError:
-        print("ERROR_MISSING_APPLICATION: Rclone\nPlease install it using: apt install rclone")
+        print("ERROR_MISSING_APPLICATION: Rclone\nPlease install it using: sudo apt install rclone")
         return False
 
     # Try running rclone

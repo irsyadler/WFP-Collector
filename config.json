@@ -1,6 +1,7 @@
 {
     "config": {
-        "pcap.networkInterface": "eth0"
+        "pcap.networkInterface": "eth0",
+        "crawler.useVirtualDisplay": true
     },
     "torrc": {},
     "browserPreferences": {},

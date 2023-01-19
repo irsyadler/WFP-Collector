@@ -28,7 +28,7 @@ def execute_webpage_visit_activity(visitData, shareDict):
     shareDict[const.share.STATUS] = const.crawlingStatus.STARTED
 
     # Path for saving files
-    FILE_ACT = os.path.join(config.path.output, visitData['name'] + '.act.json')  # Webpage browsing activity metadata
+    FILE_ACT = os.path.join(config.path.output, visitData['name'] + '.act.json')  # Webpage visit activity metadata
     FILE_LOG = os.path.join(config.path.output, visitData['name'] + '.visit.log')  # Log file for this webpage visit activity.
     FILE_TBD = os.path.join(config.path.output, visitData['name'] + '.tbd.log')  # Log file from TBDriver
     FILE_STEM = os.path.join(config.path.output, visitData['name'] + '.stem.log')  # Log file from STEM
@@ -43,7 +43,7 @@ def execute_webpage_visit_activity(visitData, shareDict):
 
     # Create activity log file and start logging
     # LOG is for debugging when activity is crashed and activity failed to be written on permanent storage
-    LOG = create_logger(FILE_LOG, 'BROWSING')
+    LOG = create_logger(FILE_LOG, 'VISIT')
     LOG.info('[VISIT_START]')
 
     # Enclose all webpage visit activity inside try-catch
@@ -175,7 +175,7 @@ def execute_webpage_visit_activity(visitData, shareDict):
         LOG.info('[TERMINATE_TOR]')
         torProcess.kill()
 
-        # -> Webpage browsing activity completed
+        # -> Webpage webpage visit activity completed
         LOG.info('[VISIT_COMPLETED]')
 
         # Add visitData to shareDict for later validation (this is reference copy)
@@ -224,7 +224,7 @@ def manage_crawling_activity():
         crawlingInfo.lastUpdate = get_timestamp()
         crawlingInfoFile = os.path.join(config.path.output, config.main.statusFilename)
 
-        # Enable notification when browsing activity completed
+        # Enable notification when crawling activity completed
         if config.notification.enable == True:
             atexit.register(notify_crawler_ended, crawlingInfo)
 
@@ -387,11 +387,11 @@ def manage_crawling_activity():
                 
                 LOG.info('[UPDATE_DATABASE]')
                 # -> Check the crawling activity status
-                if shareDict[const.share.STATUS] == const.crawlingStatus.COMPLETED:  # Browsing activity is completed
+                if shareDict[const.share.STATUS] == const.crawlingStatus.COMPLETED:  # Webpage visit activity is completed
                     LOG.info('[VISIT_FINISHED]')
                     database.update({'status': const.visitStatus.COMPLETED}, query.name == visitData['name'])
                     
-                else:  # Browsing activity failed
+                else:  # Webpage visit activity failed
                     LOG.warning('[VISIT_FAILED]')
                     database.update({'status': const.visitStatus.FAILED}, query.name == visitData['name'])
                     # Get failed reason if available

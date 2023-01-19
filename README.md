@@ -96,16 +96,13 @@ To add or modify options or configurations in WFP-Collector, the user can use [c
 **NOTE:** The content of this configuration file is case-sensitive.
 
 #### Example configuration: `config`
-To permanently instruct the Tor Browser to use the virtual display (headless mode), add `"crawler.useVirtualDisplay": true` option to the `config` object. Hence, the `config` object will look like this:
+By default, WFP-Collector will visit webpage in virtual display (or headless browsing) using **PyVirtualDisplay** module (python wrapper for Xvfb). Suppose the user want to see the browser window while visiting a webpage, change the `"crawler.useVirtualDisplay"` value to `false`. Hence, the `config` object will look like this:
 
 ```
 "config": {
-    ...
-    "crawler.useVirtualDisplay": true
+    "crawler.useVirtualDisplay": false
 }
 ```
-
-This config will instruct the WFP-Collector to use the Xvfb virtual display via the **PyVirtualDisplay** module (python wrapper for Xvfb).
 
 #### Example configuration: `torrc`
 To set the Tor to log all messages of level `notice` or higher to `/var/log/tor/notices.log`, add `"Log": "notice file /var/log/tor/notices.log"` option into the `torrc` object. Hence, the `torrc` object will look like this:
