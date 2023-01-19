@@ -3,7 +3,6 @@
 ############################################################
 
 import collections
-import json
 import argparse
 import time
 import os.path
@@ -18,11 +17,8 @@ sys.path.append(str((pathlib.Path(__file__).parent / '../crawler').resolve()))
 from functions import *
 from run import init_config
 
-# Max number of URL
-MAX_NUMBER_OF_URL = 2500
-
 # Max number of rounds
-MAX_NUMBER_OF_INSTANCE = 2500
+MAX_NUMBER_OF_INSTANCE = 3000
 
 # Filename for visit database source
 SOURCE_FILENAME = 'ats_global_500.csv'
@@ -143,11 +139,12 @@ def check_creation_config():
     init_config()
 
     # Check arguments
-    parser = argparse.ArgumentParser(description='Create visit database for crawling.')
-    parser.add_argument('-t', '--top', default=100, type=int, help='Set the number of URL (from the top) to be included in the visit database')
+    parser = argparse.ArgumentParser(description='Create a visit database for crawling activity.', add_help=False)
+    parser.add_argument('-h', '--help', action='help', help='Show this help message and exit')
+    parser.add_argument('-t', '--top', default=100, type=int, help='Set the number of URLs (from the top) to be included in the visit database')
     parser.add_argument('-m', '--mode', nargs='+', default=['desktop'],
                         choices=['desktop', 'mobile', 'tablet'], help='Set the browsing mode: desktop, mobile, or tablet')
-    parser.add_argument('-i', '--instance', default=1, type=int, help='Set the number of instance for each URL')
+    parser.add_argument('-i', '--instance', default=1, type=int, help='Set the number of instances for each URL')
     parser.add_argument('-o', '--overwrite', action='store_true', help='Overwrite existing visit database')
     parser.add_argument('-sp', '--sourcePath', help='Path to a CSV source file for visit database creation')
     parser.add_argument('-vd', '--visitDatabase', default=config.path.database,
@@ -178,11 +175,6 @@ def check_creation_config():
             proceed = False
         else:
             os.unlink(config.path.database)
-
-    # Check if the number of URL exceed the available csv source file.
-    if args.top > MAX_NUMBER_OF_URL:
-        print("ERROR: The number of URL for crawling exceeded {}.".format(MAX_NUMBER_OF_URL))
-        proceed = False
 
     # Check if the number of round exceed the limit.
     if args.instance < 1 or args.instance > MAX_NUMBER_OF_INSTANCE:
