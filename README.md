@@ -1,5 +1,5 @@
 # WFP-Collector
-WFP-Collector: Automated Dataset Collection of Tor Browser for Website Fingerprinting Evaluations.
+WFP-Collector: Automated Dataset Creator of Tor Browser for Website Fingerprinting Evaluations.
 
 
 ## Description
