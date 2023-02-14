@@ -20,15 +20,15 @@ bash test/test
 ```
 
 The [test script](test) will perform the following check:
-* [1] Ensure the required system applications are available
+* [1] Ensure the required system applications are available.
 * [2] Check `config` object in the configuration file ([config.json](../config.json)).
 * [3] Ensure the Tor Browser and Geckodriver are available and configured appropriately.
 * [4] Ensure the required python packages are available with the correct version.
 * [5] Ensure Dumpcap is working with the correct interface and permission.
-* [6] (If cloud upload is enabled) Ensure the cloud upload feature using Rclone is functional
-* [7] (If Telegram notification is enabled) Ensure the Telegram notification feature is functional
-* [8] Test the visit database creation using a custom CSV source file
-* [9] Test the main crawler activity
+* [6] (If cloud upload is enabled) Ensure the cloud upload feature using Rclone is functional.
+* [7] (If Telegram notification is enabled) Ensure the Telegram notification feature is functional.
+* [8] Test the visit database creation using a custom CSV source file.
+* [9] Test the main crawler activity.
 
 **NOTE:** The test will succeed if all tests are passed and the visited webpage is completed successfully. Sometimes, the visited webpage might fail due to network performance. Hence, please run the test twice or thrice if the test failed due to the visited webpage failing.
 
