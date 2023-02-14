@@ -112,14 +112,17 @@ def execute_webpage_visit_activity(visitData, shareDict):
             LOG.info('[START_DUMPCAP]')
             dumpcapProcess = start_dumpcap_process(FILE_PCAP)
             
-            
         # -> Get target webpage
         LOG.info('[VISIT_WEBPAGE]')
         shareDict[const.share.STATUS] = const.crawlingStatus.BROWSING  # Update webpage visit status
         visitData['start'] = get_timestamp(True)  # For network packet tracing
         driver.load_url(visitData['url'])
 
+        # -> Wait for any additional / extra webpage content loading
+        LOG.info('[SLEEP_AFTER]')
+        time.sleep(config.wait.afterWebpageLoad)
         # -> Save circuit info
+
         LOG.info('[SAVE_CIRCUIT]')
         with Controller.from_port(port=cm.STEM_CONTROL_PORT) as controller:
             controller.authenticate()
@@ -131,10 +134,6 @@ def execute_webpage_visit_activity(visitData, shareDict):
                 if 'Guard' in routerStatus.flags:
                     if routerStatus.address not in visitData['guardList']:
                         visitData['guardList'].append(routerStatus.address)
-
-        # -> Wait for any additional / extra webpage content loading
-        LOG.info('[SLEEP_AFTER]')
-        time.sleep(config.wait.afterWebpageLoad)
 
         # Save information
         LOG.info('[SAVE_URL]')
