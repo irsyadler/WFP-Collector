@@ -6,7 +6,7 @@
     "torrc": {},
     "browserPreferences": {},
     "setup": {
-        "torBrowserDownloadURL": "https://www.torproject.org/dist/torbrowser/12.0.1/tor-browser-linux64-12.0.1_ALL.tar.xz",
+        "torBrowserDownloadURL": "https://archive.torproject.org/tor-package-archive/torbrowser/12.0.1/tor-browser-linux64-12.0.1_ALL.tar.xz",
         "geckodriverDownloadURL": "https://github.com/mozilla/geckodriver/releases/download/v0.32.0/geckodriver-v0.32.0-linux64.tar.gz",
         "overwriteExistingApp": true,
         "removeDownloadedArchive": true,
