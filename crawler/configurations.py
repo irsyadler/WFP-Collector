@@ -64,14 +64,14 @@ class crawler:
     writeActivityInformation: bool = True
     # Run crawling activity in virtual display (headless browsing)
     useVirtualDisplay: bool = True
-    # Mobile user-agent string
+    # Mobile and Tablet User-Agent string
     mobileUserAgent: str = 'Mozilla/5.0 (Android 10; Mobile; rv:102.0) Gecko/102.0 Firefox/102.0'
     # [Value in pixel unit] Desktop screen size (Width, Height)
-    screenSizeDesktop: tuple[int, int] = (1920, 1080)
+    screenSizeDesktop: tuple[int, int] = (1920, 1080) # Based on: https://gs.statcounter.com/screen-resolution-stats/desktop/worldwide#monthly-202301-202301-bar
     # [Value in pixel unit] Mobile screen size (Width, Height)
-    screenSizeMobile: tuple[int, int] = (480, 854)
+    screenSizeMobile: tuple[int, int] = (360, 800) # Based on: https://gs.statcounter.com/screen-resolution-stats/mobile/worldwide#monthly-202301-202301-bar
     # [Value in pixel unit] Tablet screen size (Width, Height)
-    screenSizeTablet: tuple[int, int] = (1200, 1600)
+    screenSizeTablet: tuple[int, int] = (768, 1024) # Based on: https://gs.statcounter.com/screen-resolution-stats/tablet/worldwide#monthly-202301-202301-bar
     # How many times visit should be repeat. Less than 0 will make PENDING being skipped. This round count override PENDING status
     maxVisitRepeat: int = 2
     # Which visitStatus to execute from database
@@ -131,7 +131,7 @@ class pcap:
     # (If filter is enabled) Save the original pcap file
     saveRaw: bool = False
     # Remove TCP payload/data
-    removePayload: bool = True
+    removePayload: bool = False
     # Default localhost IP
     localhostIP: str = '127.0.0.1'
     # PCAP filtering rule
