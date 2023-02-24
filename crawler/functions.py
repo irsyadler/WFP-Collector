@@ -162,7 +162,10 @@ def read_last_visit_log(crawlLogFile):
 
     # Steps to search the log:
     # Step 1 - Get last line that are not empty
-    # Step 2 - Return the text after parse using errorReasonFilter()
+    # Step 2 - Parse the line using errorReasonFilter() 
+    # Step 3a - If errorReasonFilter() found match, if found, return the result
+    # Step 3b - If not match, find "selenium" keyword on last 10 lines without "Traceback..." & "[VISIT_EXCEPTION]"
+    # Step 3c - If there is matching "selenium" keyword, parse and return the line using errorReasonFilter()
 
     try:
         # If the log file is empty, return errorCause
@@ -181,15 +184,35 @@ def read_last_visit_log(crawlLogFile):
     except:
         return const.errorCause.LOG_UNREADABLE
 
+    skipLine = False
+    skipLineCounter = 0
+    
     # -> Find formatted log
     for lineNumber, lineText in reversed(list(enumerate(logLines))):
         lineText = lineText.strip()
 
         if len(lineText) > 0:
-            return errorReasonFilter(lineText)
-
-    else:  # If there is only lines with empty text
-        return const.errorCause.LOG_EMPTY
+            if skipLine == False:
+                temp = errorReasonFilter(lineText)
+                if temp != const.errorCause.CHECK_LOG:
+                    return temp
+                else:
+                    # Find another text
+                    skipLine = True
+            else:
+                # Stop if exceed 10 lines or found keyword "traceback" or found formatted log
+                if skipLineCounter > 15 or "traceback (most recent call last)" in lineText.lower() or "[VISIT_EXCEPTION]" in lineText:
+                    return const.errorCause.CHECK_LOG
+                elif "selenium.common.exceptions" in lineText:
+                    return errorReasonFilter(lineText)
+                else:
+                    skipLineCounter += 1
+           
+    else:  
+        if skipLine == True:
+            return const.errorCause.CHECK_LOG
+        else: # If there is only lines with empty text
+            return const.errorCause.LOG_EMPTY
 
 
 def errorReasonFilter(errorText):
@@ -201,6 +224,10 @@ def errorReasonFilter(errorText):
         # FROM -> selenium.common.exceptions.TimeoutException: Message: Timeout loading page after 300000ms
         return const.errorCause.GET_TIMEOUT
 
+    elif "TimedPromise timed out after" in errorText:
+        # FROM -> selenium.common.exceptions.TimeoutException: Message: TimedPromise timed out after 300000 ms
+        return const.errorCause.GET_TIMEOUT
+    
     elif "reached a 90 second timeout without success" in errorText:
         # FROM -> OSError: reached a 90 second timeout without success
         return const.errorCause.STEM_TIMEOUT
@@ -288,8 +315,11 @@ def kill_alive_process(killAll=False, excludeFile=None):
         # Retrieve Process ID from the output
         pid = app.split()[0]
 
-        # Terminating process
-        os.kill(int(pid), signal.SIGKILL)
+        try:
+            # Terminating process
+            os.kill(int(pid), signal.SIGKILL)
+        except Exception as error:
+            print('[PID_NOT_FOUND]', pid, error)
 
     # Return alive app counter
     return len(appList)
