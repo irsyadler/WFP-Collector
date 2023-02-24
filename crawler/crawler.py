@@ -84,6 +84,7 @@ def execute_webpage_visit_activity(visitData, shareDict):
         if visitData['mode'] == const.browserMode.MOBILE or visitData['mode'] == const.browserMode.TABLET:
             LOG.info('[{}_MODE]'.format(visitData['mode'].upper()))
             browserPreferences['privacy.resistFingerprinting'] = False
+            browserPreferences['privacy.resistFingerprinting.letterboxing'] = False
             browserPreferences['general.useragent.override'] = config.crawler.mobileUserAgent
 
         # Set custom torrc value
@@ -300,7 +301,7 @@ def manage_crawling_activity():
                 if shareDict[const.share.STATUS] == const.crawlingStatus.COMPLETED:
                     # Check for alive application
                     if aliveApplicationCounter > 0:  # There is alive application
-                        LOG.warning('[VISIT_UNSTABLE] -> Alive application: ' + aliveApplicationCounter)
+                        LOG.warning('[VISIT_UNSTABLE] -> Alive application: ' + str(aliveApplicationCounter))
                         shareDict[const.share.STATUS] == const.crawlingStatus.FAILED
                         shareDict[const.share.REASON] = const.errorCause.ALIVE_APP
 
