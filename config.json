@@ -3,14 +3,16 @@
         "pcap.networkInterface": "eth0",
         "crawler.useVirtualDisplay": true
     },
-    "torrc": {},
+    "torrc": {
+        "UseEntryGuards": "0"
+    },
     "browserPreferences": {},
     "setup": {
-        "torBrowserDownloadURL": "https://archive.torproject.org/tor-package-archive/torbrowser/12.0.1/tor-browser-linux64-12.0.1_ALL.tar.xz",
-        "geckodriverDownloadURL": "https://github.com/mozilla/geckodriver/releases/download/v0.32.0/geckodriver-v0.32.0-linux64.tar.gz",
+        "torBrowserDownloadURL": "https://archive.torproject.org/tor-package-archive/torbrowser/12.0.3/tor-browser-linux64-12.0.3_ALL.tar.xz",
+        "geckodriverDownloadURL": "https://github.com/mozilla/geckodriver/releases/download/v0.32.2/geckodriver-v0.32.2-linux64.tar.gz",
         "overwriteExistingApp": true,
         "removeDownloadedArchive": true,
         "configureHARExportTrigger": true,
-        "harExportTriggerDownloadURL":"https://addons.mozilla.org/firefox/downloads/file/964750/har_export_trigger-0.6.1.xpi"
+        "harExportTriggerDownloadURL": "https://addons.mozilla.org/firefox/downloads/file/964750/har_export_trigger-0.6.1.xpi"
     }
 }
