@@ -311,7 +311,7 @@ def kill_alive_process(killAll=False, excludeFile=None):
             appList.append(line)
 
     # Iterate over each app to kill it
-    for app in appList:
+    for index, app in enumerate(appList):
         # Retrieve Process ID from the output
         pid = app.split()[0]
 
@@ -320,6 +320,8 @@ def kill_alive_process(killAll=False, excludeFile=None):
             os.kill(int(pid), signal.SIGKILL)
         except Exception as error:
             print('[PID_NOT_FOUND]', pid, error)
+            # Process might had terminated by itself, hence, remove from list
+            appList.pop(index)
 
     # Return alive app counter
     return len(appList)

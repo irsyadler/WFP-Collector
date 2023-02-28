@@ -60,7 +60,7 @@ def init_config(checkArguments=False):
     if len(config.path.output) == 0:
         config.path.output = os.path.join(config.path.project, 'output', config.main.label)
     if config.cloud.concatenateUploadPath == True and config.main.test == False:
-        config.cloud.uploadPath = os.path.join(config.cloud.uploadPath, config.main.hostname, config.main.label)
+        config.cloud.uploadPath = os.path.join(config.cloud.uploadPath, config.main.label, config.main.hostname)
 
     return True
 

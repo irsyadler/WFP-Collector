@@ -84,7 +84,6 @@ def execute_webpage_visit_activity(visitData, shareDict):
         if visitData['mode'] == const.browserMode.MOBILE or visitData['mode'] == const.browserMode.TABLET:
             LOG.info('[{}_MODE]'.format(visitData['mode'].upper()))
             browserPreferences['privacy.resistFingerprinting'] = False
-            browserPreferences['privacy.resistFingerprinting.letterboxing'] = False
             browserPreferences['general.useragent.override'] = config.crawler.mobileUserAgent
 
         # Set custom torrc value
