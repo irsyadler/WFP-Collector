@@ -92,13 +92,17 @@ def create_crawler_visit_database(sourcePath, visitDatabasePath, args):
                 print("ERROR_CSV_FILE: Line number {} contain unsafe character(s) for the visit name.".format(lineCount))
                 return False
 
-            # Append leading 0 if the visit name is a number
-            item[0] = str(item[0]).zfill(len(str(args.top))) if item[0].isdigit() else item[0]
-            # Set proper URL with HTML quote
-            if item[1].startswith(('http://', 'https://')) == False:
-                item[1] = 'https://' + urllib.parse.quote(item[1])
-            else:
-                item[1] = urllib.parse.quote(item[1])
+
+            # Format the item data (only during the first instance)
+            if instanceCount == 1:
+                # Append leading 0 if the visit name is a number
+                item[0] = str(item[0]).zfill(len(str(args.top))) if item[0].isdigit() else item[0]
+                # Set proper URL with HTML quote
+                if item[1].startswith(('http://', 'https://')) == False:
+                    item[1] = 'https://' + urllib.parse.quote(item[1])
+                else:
+                    item[1] = urllib.parse.quote(item[1])
+            
             # Append leading 0 to instance number
             instance = str(instanceCount).zfill(len(str(args.instance)))
 
